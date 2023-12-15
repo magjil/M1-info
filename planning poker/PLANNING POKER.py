@@ -1,3 +1,4 @@
+# bonjour Said, je te vois
 from tkinter import *
 import pygame, sys
 from time import sleep
