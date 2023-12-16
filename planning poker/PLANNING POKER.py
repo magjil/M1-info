@@ -1,4 +1,4 @@
-# bonjour Said, je te vois
+# bonjour Said, je te voi
 from tkinter import *
 import pygame, sys
 from time import sleep
