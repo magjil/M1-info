@@ -1,6 +1,6 @@
 import sys
 import pygame
-import pygame_menu
+import pygame_menu 
 from pygame_menu import themes
 from time import sleep
 
@@ -13,7 +13,7 @@ pygame.display.set_caption('PLANNING POKER')
 screen = pygame.display.set_mode((500, 500),0,32)
 
 WIDTH, HEIGHT = 700,600
-RED = (255, 0, 0)
+RED = (205, 92, 92)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 CYAN = (0, 100, 100)
@@ -88,11 +88,16 @@ def initialisation ():
     Options = pygame_menu.Menu('Menu des options', WIDTH, HEIGHT, theme=themes.THEME_BLUE)
     #Options.add.dropselect(title="", items = , dropselect_id="Choix du deck", default=0)
     #Options.add.dropselect(title="Graphics Level", items=graphics, dropselect_id="graphics level", default=0)
-    entreesConfiguration ["difficulte"] = Options.add.selector('Difficulté : ', [('Hard', 1), ('Easy', 2)], onchange=set_difficulty)
-    entreesConfiguration ["musique"] = Options.add.toggle_switch(title="Musique", default=True, toggleswitch_id="music")
-    entreesConfiguration ["sons"] = Options.add.toggle_switch(title="Sons", default=False, toggleswitch_id="sound")
-    Options.add.button (title = "Enregistrer-sous", action = enregistrerSous, font_color = WHITE, background_color = GREEN)
-    Options.add.button (title = "Réinitialiser", action = Options.reset_value, font_color = WHITE, background_color = RED)
+    entreesConfiguration ["difficulte"] = Options.add.selector('Difficulté : ', [('Hard', 1), ('Easy', 2)], onchange=set_difficulty, margin=(0, 30),
+            shadow_width=15)
+    entreesConfiguration ["musique"] = Options.add.toggle_switch(title="Musique", default=True, toggleswitch_id="music", margin=(0, 30),
+            shadow_width=15)
+    entreesConfiguration ["sons"] = Options.add.toggle_switch(title="Sons", default=False, toggleswitch_id="sound",margin=(0, 30),
+            shadow_width=15)
+    Options.add.button (title = "Enregistrer-sous", action = enregistrerSous, font_color = WHITE, background_color = GREEN, margin=(0, 30),
+            shadow_width=15,)
+    Options.add.button (title = "Réinitialiser", action = Options.reset_value, font_color = WHITE, background_color=(205, 92, 92), margin=(0, 30),
+            shadow_width=15)
     Options.add.resolution = []
     
     # Menu d'enregistrement
