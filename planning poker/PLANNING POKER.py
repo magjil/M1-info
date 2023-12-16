@@ -1,4 +1,4 @@
-# rebonjour
+# re
 from tkinter import *
 import pygame, sys
 from time import sleep
