@@ -105,8 +105,7 @@ def initialisation ():
     entreesConfiguration ["nomFichier"] = menuEnregistrement.add.text_input ("Nom : ", default = "", maxchar = 21)
     menuEnregistrement.add.button ('Valider', enregistrer (entreesConfiguration))
     
-    # Écran de jeu
-    pass
+    
 
     mainmenu._theme.widget_alignment = pygame_menu.locals.ALIGN_CENTER
 
