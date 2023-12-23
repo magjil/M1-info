@@ -21,7 +21,7 @@ class Ecran:
         else:
             leTheme = BLEUTE
 
-        self.ecran = pygame_menu.Menu (
+        self.menu = pygame_menu.Menu (
             titre,
             LARGEUR,
             HAUTEUR,
@@ -36,9 +36,9 @@ class Ecran:
 
     def mettreAjour (self):
 
-        if self.ecran.is_enabled ():
-            self.ecran.update (pygame.event.get ())
-            self.ecran.draw (SURFACE)
+        if self.menu.is_enabled ():
+            self.menu.update (pygame.event.get ())
+            self.menu.draw (SURFACE)
 
         pygame.display.update ()
 
@@ -50,7 +50,7 @@ class Ecran:
             print ("Pas besoin d'ouvrir le menu principal.")
             exit (1)
 
-        self.pere.ecran._open (self.ecran)
+        self.pere.menu._open (self.menu)
 
 
 
@@ -62,7 +62,7 @@ class Ecran:
 
             case "bouton":
 
-                self.ecran.add.button (
+                self.menu.add.button (
                     texte,
                     action,
                     font_color = police,
@@ -72,7 +72,7 @@ class Ecran:
 
             case "zoneTexte":
 
-                entreesConfiguration [texte] = self.ecran.add.text_input (
+                self.entreesConfiguration [texte] = self.menu.add.text_input (
                     texte + " : ",
                     default = "",
                     maxchar = 21
@@ -81,7 +81,7 @@ class Ecran:
 
             case "selecteur":
 
-                self.entreesConfiguration [texte] = self.ecran.add.selector (
+                self.entreesConfiguration [texte] = self.menu.add.selector (
                     texte + " : ",
                     choix,
                     onchange = action,
@@ -92,7 +92,7 @@ class Ecran:
 
             case "levier":
 
-                self.entreesConfiguration [texte] = self.ecran.add.toggle_switch (
+                self.entreesConfiguration [texte] = self.menu.add.toggle_switch (
                     title = texte,
                     default = True,
                     margin = (0, 30),
@@ -108,20 +108,16 @@ class Ecran:
 
 
     def enregistrer (self):
-        def fonctionnelle ():
         
-            # Lecture des valeurs dans les champs d'entrée
-            configuration = {
-                nom: entree.get_value ()
-                for nom, entree in self.entreesConfiguration.items ()
-            }
-            
-            # Écriture dans un fichier Json
-            nomFichier = configuration ["Nom"]
-            ecrire (nomFichier, configuration)
-            
-            # Retour au menu précédent
-            self.ecran.reset (1)
-            
-            
-        return fonctionnelle
+        # Lecture des valeurs dans les champs d'entrée
+        configuration = {
+            nom: entree.get_value ()
+            for nom, entree in self.pere.entreesConfiguration.items ()
+        }
+        
+        # Écriture dans un fichier Json
+        nomFichier = self.entreesConfiguration ["Nom du fichier"].get_value ()
+        ecrire (nomFichier, configuration)
+        
+        # Retour au menu précédent
+        self.menu.reset (1)
