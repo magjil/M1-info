@@ -1,25 +1,14 @@
-import sys
-import pygame
-import pygame_menu 
-from pygame_menu import themes
-from time import sleep
+# from time import sleep
 
 from donnees import *
-
+from interface import *
 
 
 pygame.init()
 pygame.display.set_caption('PLANNING POKER')
 screen = pygame.display.set_mode((500, 500),0,32)
 
-WIDTH, HEIGHT = 700,600
-RED = (205, 92, 92)
-GREEN = (0, 150, 0)
-BLUE = (0, 0, 255)
-CYAN = (0, 100, 100)
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-surface = pygame.display.set_mode((WIDTH,HEIGHT))
+
 
 
 def set_difficulty(value, difficulty):
