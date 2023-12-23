@@ -1,5 +1,5 @@
 """
-from time import sleep
+
 mainmenu._theme.widget_alignment = pygame_menu.locals.ALIGN_CENTER
 
 def main(): 
@@ -24,7 +24,9 @@ from interface import *
 
 
 
-def initialisation ():
+# Création des objets
+
+def initialiser ():
 
 
     # Fenêtre
@@ -36,10 +38,15 @@ def initialisation ():
 
     # Menus
 
-    global menuPrincipal, menuOptions, menuEnregistrement
+    global menuPrincipal, enJeu, menuOptions, menuEnregistrement
 
     menuPrincipal = Ecran (
-        titre = "PLANNING POKER"
+        titre = "Menu principal"
+    )
+
+    enJeu = Ecran (
+        titre = "Planning",
+        pere = menuPrincipal
     )
 
     menuOptions = Ecran (
@@ -57,7 +64,8 @@ def initialisation ():
 
     menuPrincipal.ajouter (
         element = "bouton",
-        texte = "JOUER"
+        texte = "JOUER",
+        action = lancer
     )
 
     menuPrincipal.ajouter (
@@ -123,6 +131,73 @@ def initialisation ():
 
 
 
+# Lancement du jeu
+
+def lancer ():
+
+
+    # Mise en place
+
+    global config
+    config = menuOptions.obtenirConfig ()
+
+    ensJoueurs = {"John", "Harry", "Sherlock"}
+    sommeVoix = [0]
+    dicoTaches = {"pont": 0, "immeuble": 0}
+
+    enJeu.ouvrir ()
+
+
+    aQuiLeTour = enJeu.ajouter (
+        element = "label",
+        texte = "",
+        police = NOIR,
+        fond = CYAN,
+    )
+
+    enJeu.ajouter (
+        element = "label",
+        texte = "Votez pour une tache d'étalonnage",
+        police = BLANC,
+        fond = VERT,
+        marge = 0
+    )
+
+    enJeu.ajouter (
+        element = "label",
+        texte = "qui aura 1 comme priorité :",
+        police = BLANC,
+        fond = VERT,
+        marge = 30
+    )
+
+    for tache in dicoTaches:
+        enJeu.ajouter (
+            element = "bouton",
+            texte = tache,
+            action = voix (sommeVoix, dicoTaches, tache)
+        )
+
+
+    # Décision de la tâche d'étalonnage (qui vaut 1)
+
+    for joueur in ensJoueurs:
+        sommeVoixActuelle = sommeVoix [0] 
+        aQuiLeTour.set_title ("C'est à " + joueur + " de voter.")
+
+        while sommeVoixActuelle == sommeVoix [0]:
+            menuPrincipal.mettreAjour ()
+
+
+def voix (sommeVoix, dicoTaches, tache):
+    def fonctionnelle ():
+
+        sommeVoix [0] += 1
+        dicoTaches [tache] += 1
+
+    return fonctionnelle
+
+
 # Le menu se met à jour tout seul si un autre objet est ajouté ou supprimé
 
 def bouclePrincipale ():
@@ -131,6 +206,5 @@ def bouclePrincipale ():
         menuPrincipal.mettreAjour ()
 
 
-
-initialisation ()
+initialiser ()
 bouclePrincipale ()

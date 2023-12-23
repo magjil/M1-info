@@ -34,6 +34,7 @@ class Ecran:
         self.entreesConfiguration = dict ()
 
 
+
     def mettreAjour (self):
 
         if self.menu.is_enabled ():
@@ -45,7 +46,6 @@ class Ecran:
 
     def ouvrir (self):
 
-
         if self.racine:
             print ("Pas besoin d'ouvrir le menu principal.")
             exit (1)
@@ -54,10 +54,40 @@ class Ecran:
 
 
 
-    def ajouter (self, element, texte = "", action = vide, choix = list (), fond = BEIGE, police = NOIR):
+    def ajouter (self, element, texte = "", action = vide, choix = list (), fond = BEIGE, police = NOIR, marge = 30):
+
+        objetCree = None
 
 
         match (element):
+
+            case "label":
+
+                objetCree = self.menu.add.label (
+                    texte,
+                    font_color = police,
+                    background_color = fond,
+                    margin = (0, marge)
+                )
+
+        
+            case "zoneTexte":
+
+                self.entreesConfiguration [texte] = self.menu.add.text_input (
+                    texte + " : ",
+                    default = "",
+                    maxchar = 21
+                )
+
+
+            case "levier":
+
+                self.entreesConfiguration [texte] = self.menu.add.toggle_switch (
+                    title = texte,
+                    default = True,
+                    margin = (0, marge),
+                    shadow_width = 15
+                )
 
 
             case "bouton":
@@ -70,32 +100,13 @@ class Ecran:
                 )
 
 
-            case "zoneTexte":
-
-                self.entreesConfiguration [texte] = self.menu.add.text_input (
-                    texte + " : ",
-                    default = "",
-                    maxchar = 21
-                )
-
-
             case "selecteur":
 
                 self.entreesConfiguration [texte] = self.menu.add.selector (
                     texte + " : ",
                     choix,
                     onchange = action,
-                    margin = (0, 30),
-                    shadow_width = 15
-                )
-
-
-            case "levier":
-
-                self.entreesConfiguration [texte] = self.menu.add.toggle_switch (
-                    title = texte,
-                    default = True,
-                    margin = (0, 30),
+                    margin = (0, marge),
                     shadow_width = 15
                 )
 
@@ -104,20 +115,28 @@ class Ecran:
 
                 print ("L'élément " + element + "n'est pas reconnu par l'interface.")
                 exit (1)
-
-
-
-    def enregistrer (self):
         
+
+        return objetCree
+
+
+
+    def obtenirConfig (self):
+
         # Lecture des valeurs dans les champs d'entrée
         configuration = {
             nom: entree.get_value ()
             for nom, entree in self.pere.entreesConfiguration.items ()
         }
+
+        return configuration
+
+
+    def enregistrer (self):
         
         # Écriture dans un fichier Json
         nomFichier = self.entreesConfiguration ["Nom du fichier"].get_value ()
-        ecrire (nomFichier, configuration)
+        ecrire (nomFichier, obtenirConfig (self))
         
         # Retour au menu précédent
         self.menu.reset (1)
