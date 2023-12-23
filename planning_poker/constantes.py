@@ -1,6 +1,9 @@
+import json
+import os
 import pygame
-from pygame_menu import themes
+import pygame_menu
 from pathlib import Path
+
 
 # Données
 cheminDonnees = str (Path (__file__).resolve ().parent) + "/donnees"
@@ -14,11 +17,19 @@ NOIR  = (0,   0,   0  )
 BLANC = (255, 255, 255)
 
 # Disposition
-SOLAIRE = themes.THEME_SOLARIZED
-BLEUTE = themes.THEME_BLUE
+SOLAIRE = pygame_menu.themes.THEME_SOLARIZED
+BLEUTE = pygame_menu.themes.THEME_BLUE
 LARGEUR, HAUTEUR = 700, 600
-surface = pygame.display.set_mode ((LARGEUR, HAUTEUR))
+SURFACE = pygame.display.set_mode ((LARGEUR, HAUTEUR))
+
+# Modes de jeu
+modesJeu = list ()
+modesJeu.append (("Majorité absolue", None))
+modesJeu.append (("Majorité relative", None))
+modesJeu.append (("Médiane", None))
+modesJeu.append (("Moyenne", None))
+modesJeu.append (("Attendre l'unanimité", None))
 
 # Fonction vide
-def vide ():
+def vide (arg1 = None, arg2 = None):
     pass

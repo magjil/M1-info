@@ -1,6 +1,3 @@
-import json
-import os
-
 from constantes import *
 
 

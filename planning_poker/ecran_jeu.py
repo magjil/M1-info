@@ -1,31 +1,108 @@
-# from time import sleep
-# mainmenu._theme.widget_alignment = pygame_menu.locals.ALIGN_CENTER
+"""
+from time import sleep
+mainmenu._theme.widget_alignment = pygame_menu.locals.ALIGN_CENTER
 
-from donnees import *
+def main(): 
+
+    graphics = [("Low", "low"),
+                ("Medium", "medium"),
+                ("High", "high"),
+                ("Ultra High", "ultra high")]
+
+    resolution = [("1920x1080", "1920x1080"),
+                  ("1920x1200", "1920x1200"),
+                  ("1280x720", "1280x720"),
+                  ("2560x1440", "2560x1440"),
+                  ("3840x2160", "3840x2160")]
+
+Options.add.dropselect(title="", items = , dropselect_id="Choix du deck", default=0)
+Options.add.dropselect(title="Graphics Level", items=graphics, dropselect_id="graphics level", default=0)
+"""
+
+
 from interface import *
 
 
-pygame.init ()
-pygame.display.set_caption ("PLANNING POKER")
-screen = pygame.display.set_mode ((LARGEUR, HAUTEUR), 0, 32)
 
 def initialisation ():
 
-    """
-    global mainmenu, menuEnregistrement, Options
-    entreesConfiguration = dict ()
-    """
+
+    # Fenêtre
+
+    pygame.init ()
+    pygame.display.set_caption ("PLANNING POKER")
+    screen = pygame.display.set_mode ((LARGEUR, HAUTEUR), 0, 32)
+    
+
+    # Menus
+
+    global menuPrincipal, menuOptions, menuEnregistrement
+
+    menuPrincipal = Ecran (
+        titre = "PLANNING POKER"
+    )
+
+    menuOptions = Ecran (
+        titre = "Menu des options",
+        pere = menuPrincipal
+    )
+
 
     # Menu principal
-    mainmenu = pygame_menu.Menu('PLANNING POKER', LARGEUR, HAUTEUR, theme=themes.THEME_SOLARIZED)
-    mainmenu.add.button('JOUER', start_the_game)
-    mainmenu.add.button('OPTIONS', Options_menu)
-    mainmenu.add.button('QUITTER', pygame_menu.events.EXIT)
+
+    menuPrincipal.ajouter (
+        element = "bouton",
+        texte = "JOUER"
+    )
+
+    menuPrincipal.ajouter (
+        element = "bouton",
+        texte = "OPTIONS",
+        action = menuOptions.ouvrir
+    )
+
+    menuPrincipal.ajouter (
+        element = "bouton",
+        texte = "QUITTER",
+        action = pygame_menu.events.EXIT
+    )
+
 
     # Menu des options
-    Options = pygame_menu.Menu('Menu des options', LARGEUR, HAUTEUR, theme=themes.THEME_BLUE)
-    #Options.add.dropselect(title="", items = , dropselect_id="Choix du deck", default=0)
-    #Options.add.dropselect(title="Graphics Level", items=graphics, dropselect_id="graphics level", default=0)
+
+    menuOptions.ajouter (
+        element = "levier",
+        texte = "Musique",
+    )
+
+    menuOptions.ajouter (
+        element = "levier",
+        texte = "Effets sonores",
+    )
+
+    menuOptions.ajouter (
+        element = "selecteur",
+        texte = "Mode de jeu",
+        choix = modesJeu [:]
+    )
+
+
+# ---------------------------------------------------
+
+    global mainmenu, Options
+    entreesConfiguration = dict ()
+    
+
+    
+    # Menu principal
+    mainmenu = pygame_menu.Menu('PLANNING POKER', LARGEUR, HAUTEUR)
+    mainmenu.add.button('JOUER', start_the_game)
+    mainmenu.add.button('OPTIONS', Options_menu)
+    mainmenu.add.button('QUITTER', )
+
+    # Menu des options
+    Options = pygame_menu.Menu('Menu des options', LARGEUR, HAUTEUR)
+    
     entreesConfiguration ["difficulte"] = Options.add.selector('Difficulté : ', [('Hard', 1), ('Easy', 2)], onchange=set_difficulty, margin=(0, 30),
             shadow_width=15)
     entreesConfiguration ["musique"] = Options.add.toggle_switch(title="Musique", default=True, margin=(0, 30),
@@ -39,7 +116,7 @@ def initialisation ():
 
     
     # Menu d'enregistrement
-    menuEnregistrement = pygame_menu.Menu("Sauvegarder la configuration...", LARGEUR, HAUTEUR, theme=themes.THEME_BLUE)
+    menuEnregistrement = pygame_menu.Menu("Sauvegarder la configuration...", LARGEUR, HAUTEUR)
     
     menuEnregistrement.add.button ('Valider', enregistrer (entreesConfiguration))
 
@@ -80,18 +157,7 @@ def enregistrer (entreesConfiguration):
 
 
 
-def main(): 
 
-    graphics = [("Low", "low"),
-                ("Medium", "medium"),
-                ("High", "high"),
-                ("Ultra High", "ultra high")]
-
-    resolution = [("1920x1080", "1920x1080"),
-                  ("1920x1200", "1920x1200"),
-                  ("1280x720", "1280x720"),
-                  ("2560x1440", "2560x1440"),
-                  ("3840x2160", "3840x2160")]
 
 
 
@@ -108,12 +174,7 @@ def main():
 def bouclePrincipale ():
 
     while True:
-
-        if mainmenu.is_enabled ():
-            mainmenu.update (pygame.event.get ())
-            mainmenu.draw (surface)
-        pygame.display.update ()
-
+        menuPrincipal.mettreAjour ()
 
 
 initialisation ()

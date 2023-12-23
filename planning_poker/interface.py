@@ -1,21 +1,17 @@
-import pygame
-import pygame_menu
-
-from constantes import *
 from donnees import *
 
 
 
-class Ecran:
+class Ecran (pygame_menu.Menu):
 
 
-    def __init__ (self, father = None, titre = ""):
+    def __init__ (self, pere = None, titre = ""):
 
 
         # Test si l'écran est un sous-écran d'un autre
 
-        self.father = father
-        self.racine = father == None
+        self.pere = pere
+        self.racine = pere == None
 
 
         # Création de l'écran
@@ -38,6 +34,14 @@ class Ecran:
         self.entreesConfiguration = dict ()
 
 
+    def mettreAjour (self):
+
+        if self.ecran.is_enabled ():
+            self.ecran.update (pygame.event.get ())
+            self.ecran.draw (SURFACE)
+
+        pygame.display.update ()
+
 
     def ouvrir (self):
 
@@ -46,7 +50,7 @@ class Ecran:
             print ("Pas besoin d'ouvrir le menu principal.")
             exit (1)
 
-        self.father._open (self.ecran)
+        self.pere.ecran._open (self.ecran)
 
 
 
@@ -63,7 +67,7 @@ class Ecran:
 
             case "zoneTexte":
 
-                entreesConfiguration [texte] = menuEnregistrement.add.text_input (
+                entreesConfiguration [texte] = self.ecran.add.text_input (
                     texte + " : ",
                     default = "",
                     maxchar = 21
@@ -83,7 +87,7 @@ class Ecran:
 
             case "levier":
 
-                self.entreesConfiguration [texte] = Options.add.toggle_switch (
+                self.entreesConfiguration [texte] = self.ecran.add.toggle_switch (
                     title = texte,
                     default = True,
                     margin = (0, 30),
