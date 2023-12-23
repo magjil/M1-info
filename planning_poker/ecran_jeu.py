@@ -47,6 +47,11 @@ def initialisation ():
         pere = menuPrincipal
     )
 
+    menuEnregistrement = Ecran (
+        titre = "Sauvegarder la configuration...",
+        pere = menuOptions
+    )
+
 
     # Menu principal
 
@@ -85,6 +90,23 @@ def initialisation ():
         texte = "Mode de jeu",
         choix = modesJeu [:]
     )
+
+    menuOptions.ajouter (
+        element = "bouton",
+        texte = "Enregistrer-sous",
+        action = menuEnregistrement.ouvrir,
+        fond = BLEU,
+        police = BLANC
+    )
+
+    menuOptions.ajouter (
+        element = "bouton",
+        texte = "Réinitialiser",
+        action = menuOptions.ecran.reset_value,
+        fond = ROUGE,
+        police = BLANC
+    )
+    
 
 
 # ---------------------------------------------------
@@ -164,7 +186,7 @@ def enregistrer (entreesConfiguration):
 
     
     
-
+# ---------------------------------------------------
     
 
 

@@ -2,7 +2,7 @@ from donnees import *
 
 
 
-class Ecran (pygame_menu.Menu):
+class Ecran:
 
 
     def __init__ (self, pere = None, titre = ""):
@@ -54,7 +54,7 @@ class Ecran (pygame_menu.Menu):
 
 
 
-    def ajouter (self, element, texte = "", action = vide, choix = list ()):
+    def ajouter (self, element, texte = "", action = vide, choix = list (), fond = BEIGE, police = NOIR):
 
 
         match (element):
@@ -62,7 +62,12 @@ class Ecran (pygame_menu.Menu):
 
             case "bouton":
 
-                self.ecran.add.button (texte, action)
+                self.ecran.add.button (
+                    texte,
+                    action,
+                    font_color = police,
+                    background_color = fond
+                )
 
 
             case "zoneTexte":
