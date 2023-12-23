@@ -1,10 +1,7 @@
 import json
 import os
-from pathlib import Path
 
-
-global cheminDonnees
-cheminDonnees = str (Path (__file__).resolve ().parent) + "/donnees"
+from constantes import *
 
 
 def ecrire (nomFichier, donnees):
@@ -21,10 +18,10 @@ def lire (nomFichier):
     return json.load (fichier)
 
 
-def main ():
+def dossierDonnees ():
 
     if not os.path.isdir (cheminDonnees):
         os.mkdir (cheminDonnees)
 
 
-main ()
+dossierDonnees ()

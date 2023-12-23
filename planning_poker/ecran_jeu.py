@@ -1,14 +1,47 @@
 # from time import sleep
+# mainmenu._theme.widget_alignment = pygame_menu.locals.ALIGN_CENTER
 
 from donnees import *
 from interface import *
 
 
-pygame.init()
-pygame.display.set_caption('PLANNING POKER')
-screen = pygame.display.set_mode((500, 500),0,32)
+pygame.init ()
+pygame.display.set_caption ("PLANNING POKER")
+screen = pygame.display.set_mode ((LARGEUR, HAUTEUR), 0, 32)
 
+def initialisation ():
 
+    """
+    global mainmenu, menuEnregistrement, Options
+    entreesConfiguration = dict ()
+    """
+
+    # Menu principal
+    mainmenu = pygame_menu.Menu('PLANNING POKER', LARGEUR, HAUTEUR, theme=themes.THEME_SOLARIZED)
+    mainmenu.add.button('JOUER', start_the_game)
+    mainmenu.add.button('OPTIONS', Options_menu)
+    mainmenu.add.button('QUITTER', pygame_menu.events.EXIT)
+
+    # Menu des options
+    Options = pygame_menu.Menu('Menu des options', LARGEUR, HAUTEUR, theme=themes.THEME_BLUE)
+    #Options.add.dropselect(title="", items = , dropselect_id="Choix du deck", default=0)
+    #Options.add.dropselect(title="Graphics Level", items=graphics, dropselect_id="graphics level", default=0)
+    entreesConfiguration ["difficulte"] = Options.add.selector('Difficulté : ', [('Hard', 1), ('Easy', 2)], onchange=set_difficulty, margin=(0, 30),
+            shadow_width=15)
+    entreesConfiguration ["musique"] = Options.add.toggle_switch(title="Musique", default=True, margin=(0, 30),
+            shadow_width=15)
+    entreesConfiguration ["sons"] = Options.add.toggle_switch(title="Sons", default=True,margin=(0, 30),
+            shadow_width=15)
+    Options.add.button (title = "Enregistrer-sous", action = enregistrerSous, font_color = BLANC, background_color = VERT, margin=(0, 30),
+            shadow_width=15,)
+    Options.add.button (title = "Réinitialiser", action = Options.reset_value, font_color = BLANC, background_color=(205, 92, 92), margin=(0, 30),
+            shadow_width=15)
+
+    
+    # Menu d'enregistrement
+    menuEnregistrement = pygame_menu.Menu("Sauvegarder la configuration...", LARGEUR, HAUTEUR, theme=themes.THEME_BLUE)
+    
+    menuEnregistrement.add.button ('Valider', enregistrer (entreesConfiguration))
 
 
 def set_difficulty(value, difficulty):
@@ -62,41 +95,11 @@ def main():
 
 
 
-def initialisation ():
 
-    global mainmenu, menuEnregistrement, Options
-    entreesConfiguration = dict ()
-
-    # Menu principal
-    mainmenu = pygame_menu.Menu('PLANNING POKER', WIDTH, HEIGHT, theme=themes.THEME_SOLARIZED)
-    mainmenu.add.button('JOUER', start_the_game)
-    mainmenu.add.button('OPTIONS', Options_menu)
-    mainmenu.add.button('QUITTER', pygame_menu.events.EXIT)
-
-    # Menu des options
-    Options = pygame_menu.Menu('Menu des options', WIDTH, HEIGHT, theme=themes.THEME_BLUE)
-    #Options.add.dropselect(title="", items = , dropselect_id="Choix du deck", default=0)
-    #Options.add.dropselect(title="Graphics Level", items=graphics, dropselect_id="graphics level", default=0)
-    entreesConfiguration ["difficulte"] = Options.add.selector('Difficulté : ', [('Hard', 1), ('Easy', 2)], onchange=set_difficulty, margin=(0, 30),
-            shadow_width=15)
-    entreesConfiguration ["musique"] = Options.add.toggle_switch(title="Musique", default=True, toggleswitch_id="music", margin=(0, 30),
-            shadow_width=15)
-    entreesConfiguration ["sons"] = Options.add.toggle_switch(title="Sons", default=False, toggleswitch_id="sound",margin=(0, 30),
-            shadow_width=15)
-    Options.add.button (title = "Enregistrer-sous", action = enregistrerSous, font_color = WHITE, background_color = GREEN, margin=(0, 30),
-            shadow_width=15,)
-    Options.add.button (title = "Réinitialiser", action = Options.reset_value, font_color = WHITE, background_color=(205, 92, 92), margin=(0, 30),
-            shadow_width=15)
-    Options.add.resolution = []
-    
-    # Menu d'enregistrement
-    menuEnregistrement = pygame_menu.Menu("Sauvegarder la configuration...", WIDTH, HEIGHT, theme=themes.THEME_BLUE)
-    entreesConfiguration ["nomFichier"] = menuEnregistrement.add.text_input ("Nom : ", default = "", maxchar = 21)
-    menuEnregistrement.add.button ('Valider', enregistrer (entreesConfiguration))
     
     
 
-    mainmenu._theme.widget_alignment = pygame_menu.locals.ALIGN_CENTER
+    
 
 
 
