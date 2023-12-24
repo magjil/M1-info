@@ -92,7 +92,7 @@ class Ecran:
 
             case "bouton":
 
-                self.menu.add.button (
+                objetCree = self.menu.add.button (
                     texte,
                     action,
                     font_color = police,
@@ -126,7 +126,7 @@ class Ecran:
         # Lecture des valeurs dans les champs d'entrée
         configuration = {
             nom: entree.get_value ()
-            for nom, entree in self.pere.entreesConfiguration.items ()
+            for nom, entree in self.entreesConfiguration.items ()
         }
 
         return configuration
@@ -136,7 +136,7 @@ class Ecran:
         
         # Écriture dans un fichier Json
         nomFichier = self.entreesConfiguration ["Nom du fichier"].get_value ()
-        ecrire (nomFichier, obtenirConfig (self))
+        ecrire (nomFichier, self.pere.obtenirConfig ())
         
         # Retour au menu précédent
         self.menu.reset (1)

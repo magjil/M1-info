@@ -27,7 +27,6 @@ SURFACE = pygame.display.set_mode ((LARGEUR, HAUTEUR))
 
 # Modes de jeu
 modesJeu = list ()
-modesJeu.append (("Majorité absolue", None))
 modesJeu.append (("Majorité relative", None))
 modesJeu.append (("Médiane", None))
 modesJeu.append (("Moyenne", None))

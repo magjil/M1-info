@@ -20,6 +20,7 @@ Options.add.dropselect(title="Graphics Level", items=graphics, dropselect_id="gr
 """
 
 
+from calculs import *
 from interface import *
 
 
@@ -43,7 +44,7 @@ def initialiser ():
     menuPrincipal = Ecran (
         titre = "Menu principal"
     )
-
+    
     enJeu = Ecran (
         titre = "Planning",
         pere = menuPrincipal
@@ -62,11 +63,18 @@ def initialiser ():
 
     # Menu principal
 
-    menuPrincipal.ajouter (
+    global boutonLancer, boutonOuvrir
+    boutonLancer = menuPrincipal.ajouter (
         element = "bouton",
         texte = "JOUER",
         action = lancer
     )
+    boutonOuvrir = menuPrincipal.ajouter (
+        element = "bouton",
+        texte = "JOUER",
+        action = enJeu.ouvrir
+    )
+    boutonOuvrir.hide ()
 
     menuPrincipal.ajouter (
         element = "bouton",
@@ -136,6 +144,12 @@ def initialiser ():
 def lancer ():
 
 
+    # Pour ne pas lancer le jeu plusieurs fois
+
+    boutonLancer.hide ()
+    boutonOuvrir.show ()
+
+
     # Mise en place
 
     global config
@@ -143,9 +157,11 @@ def lancer ():
 
     ensJoueurs = {"John", "Harry", "Sherlock"}
     sommeVoix = [0]
-    dicoTaches = {"pont": 0, "immeuble": 0}
 
-    enJeu.ouvrir ()
+    dicoTaches = {"pont": 0, "immeuble": 0}
+    if dicoTaches == dict ():
+        print ("Vous devez définir au moins une tâche dans le menu des options.")
+        exit (1)
 
 
     aQuiLeTour = enJeu.ajouter (
@@ -177,16 +193,52 @@ def lancer ():
             texte = tache,
             action = voix (sommeVoix, dicoTaches, tache)
         )
+    
+    enJeu.ouvrir ()
 
 
     # Décision de la tâche d'étalonnage (qui vaut 1)
 
-    for joueur in ensJoueurs:
-        sommeVoixActuelle = sommeVoix [0] 
-        aQuiLeTour.set_title ("C'est à " + joueur + " de voter.")
+    choisie = None
+    premierPassage = True
 
-        while sommeVoixActuelle == sommeVoix [0]:
-            menuPrincipal.mettreAjour ()
+    # L'on continue tant qu'aucune tâche n'a été élue
+    while choisie == None:
+
+        # Les joueurs votent chacun leur tour
+        for joueur in ensJoueurs:
+            sommeVoixActuelle = sommeVoix [0] 
+            aQuiLeTour.set_title ("C'est à " + joueur + " de voter.")
+
+            # Rafraîchissement de l'écran tant que le joueur n'a pas voté
+            while sommeVoixActuelle == sommeVoix [0]:
+                menuPrincipal.mettreAjour ()
+
+        # Choix de la tâche par unanimité
+        if premierPassage or config ["Mode de jeu"] == "Attendre l'unanimité":
+            choisie = unanimite (dicoTaches)
+
+            # L'on réinitialise les voix
+            sommeVoix [0] = 0
+            for tache in dicoTaches:
+                dicoTaches [tache] = 0
+
+            # L'unanimité n'a pas été atteinte
+            premierPassage = False
+        
+        # Choix de la tâche par majorité relative
+        else:
+            choisie = majoriteRelative (dicoTaches)
+
+
+    # Création du backlog
+
+    # à faire
+
+
+    # Décision des priorités des tâches
+
+    # à faire
 
 
 def voix (sommeVoix, dicoTaches, tache):
