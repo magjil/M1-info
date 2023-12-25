@@ -1,4 +1,6 @@
 """
+ce bout de code jsp à quoi il sert donc je l'ai gardé là :
+
 
 mainmenu._theme.widget_alignment = pygame_menu.locals.ALIGN_CENTER
 
@@ -163,14 +165,6 @@ def lancer ():
         print ("Vous devez définir au moins une tâche dans le menu des options.")
         exit (1)
 
-
-    aQuiLeTour = enJeu.ajouter (
-        element = "label",
-        texte = "",
-        police = NOIR,
-        fond = CYAN,
-    )
-
     enJeu.ajouter (
         element = "label",
         texte = "Votez pour une tache d'étalonnage",
@@ -187,6 +181,13 @@ def lancer ():
         marge = 30
     )
 
+    aQuiLeTour = enJeu.ajouter (
+        element = "label",
+        texte = "",
+        police = NOIR,
+        fond = CYAN,
+    )
+
     for tache in dicoTaches:
         enJeu.ajouter (
             element = "bouton",
@@ -197,7 +198,7 @@ def lancer ():
     enJeu.ouvrir ()
 
 
-    # Décision de la tâche d'étalonnage (qui vaut 1)
+    # --- Décision de la tâche d'étalonnage (qui vaut 1) ---
 
     choisie = None
     premierPassage = True
@@ -218,27 +219,93 @@ def lancer ():
         if premierPassage or config ["Mode de jeu"] == "Attendre l'unanimité":
             choisie = unanimite (dicoTaches)
 
-            # L'on réinitialise les voix
-            sommeVoix [0] = 0
-            for tache in dicoTaches:
-                dicoTaches [tache] = 0
-
             # L'unanimité n'a pas été atteinte
             premierPassage = False
         
         # Choix de la tâche par majorité relative
         else:
             choisie = majoriteRelative (dicoTaches)
+            
+        # L'on réinitialise les voix
+        sommeVoix [0] = 0
+        for tache in dicoTaches:
+            dicoTaches [tache] = 0
+    
+
+    # Les priorites sont initialisées à None
+    
+    tachesRestantes = dicoTaches.keys () - {choisie}
+    
+    for tache in tachesRestantes:
+        dicoTaches [tache] = None
 
 
-    # Création du backlog
+    # Mise à jour du backlog
 
-    # à faire
+    dicoTaches [choisie] = 1
+    enJeu.menu.clear ()
+    afficher (dicoTaches)
 
 
-    # Décision des priorités des tâches
+    # Mise en place
+    
+    enJeu.ajouter (
+        element = "label",
+        texte = "Votez pour un coût de la tâche :",
+        police = BLANC,
+        fond = VERT,
+        marge = 0
+    )
 
-    # à faire
+    labelTache = enJeu.ajouter (
+        element = "label",
+        texte = "",
+        police = BLANC,
+        fond = VERT,
+        marge = 30
+    )
+    
+    aQuiLeTour = enJeu.ajouter (
+        element = "label",
+        texte = "",
+        police = NOIR,
+        fond = CYAN,
+    )
+    
+    
+    # --- Décision des coûts des tâches ---
+
+    for tache in tachesRestantes:
+        labelTache.set_title (tache)
+        choisie = None
+        
+        # L'on continue tant qu'aucune tâche n'a été élue
+        while choisie == None:
+        
+            # Les joueurs votent chacun leur tour
+            for joueur in ensJoueurs:
+                sommeVoixActuelle = sommeVoix [0] 
+                aQuiLeTour.set_title ("C'est à " + joueur + " de voter.")
+                
+                # Rafraîchissement de l'écran tant que le joueur n'a pas voté
+                while sommeVoixActuelle == sommeVoix [0]:
+                    menuPrincipal.mettreAjour ()
+                    
+            # Choix de la tâche par unanimité
+            if premierPassage or config ["Mode de jeu"] == "Attendre l'unanimité":
+                choisie = unanimite (dicoTaches)
+
+                # L'unanimité n'a pas été atteinte
+                premierPassage = False
+            
+            # Choix de la tâche par majorité relative
+            else:
+                choisie = majoriteRelative (dicoTaches)
+                
+            # L'on réinitialise les voix
+            sommeVoix [0] = 0
+            
+    # à faire : finir ça lul
 
 
 def voix (sommeVoix, dicoTaches, tache):
@@ -249,6 +316,29 @@ def voix (sommeVoix, dicoTaches, tache):
 
     return fonctionnelle
 
+
+def afficher (backlog):
+
+    # à faire : mettre le bakclog à gauche ou à droite
+
+    enJeu.ajouter (
+        element = "label",
+        texte = "- Backlog -",
+        police = BLANC,
+        fond = MAGENTA,
+    )
+
+    for tache, cout in backlog.items ():
+        if cout != None:
+        
+            enJeu.ajouter (
+                element = "label",
+                texte = tache + " : " + str (cout),
+                police = BLANC,
+                fond = MAGENTA,
+                marge = 0
+            )
+    
 
 # Le menu se met à jour tout seul si un autre objet est ajouté ou supprimé
 
