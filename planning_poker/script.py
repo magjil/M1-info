@@ -68,27 +68,35 @@ def initialiser ():
     global boutonLancer, boutonOuvrir
     boutonLancer = menuPrincipal.ajouter (
         element = "bouton",
-        texte = "JOUER",
-        action = lancer
+        texte = "LANCER",
+        action = lancer,
+        police = MAGENTA
     )
     boutonOuvrir = menuPrincipal.ajouter (
         element = "bouton",
-        texte = "JOUER",
-        action = enJeu.ouvrir
+        texte = "LANCER",
+        action = enJeu.ouvrir,
+        police = MAGENTA
     )
     boutonOuvrir.hide ()
 
-    menuPrincipal.ajouter (
+    boutonOptions = menuPrincipal.ajouter (
         element = "bouton",
         texte = "OPTIONS",
-        action = menuOptions.ouvrir
+        action = menuOptions.ouvrir,
+        police = BLEU
     )
 
-    menuPrincipal.ajouter (
+    boutonQuitter = menuPrincipal.ajouter (
         element = "bouton",
         texte = "QUITTER",
         action = pygame_menu.events.EXIT
     )
+    
+    boutonLancer.scale (2, 2)
+    boutonOuvrir.scale (2, 2)
+    boutonOptions.scale (2, 2)
+    boutonQuitter.scale (2, 2)
 
 
     # Menu des options
@@ -96,25 +104,87 @@ def initialiser ():
     menuOptions.ajouter (
         element = "levier",
         texte = "Musique",
+        fond = TURQUOISE,
+        marge = 0
     )
 
     menuOptions.ajouter (
         element = "levier",
         texte = "Effets sonores",
+        fond = TURQUOISE
+    )
+    
+    menuOptions.ajouter (
+        element = "zoneTexte",
+        texte = "Temps du tour en s.",
+        fond = CYAN,
+        marge = 0
     )
 
     menuOptions.ajouter (
         element = "selecteur",
         texte = "Mode de jeu",
-        choix = modesJeu [:]
+        choix = modesJeu [:],
+        fond = CYAN
+    )
+    
+    menuOptions.ajouter (
+        element = "zoneTexte",
+        texte = "Nom du joueur",
+        police = BLANC,
+        fond = MAGENTA,
+        marge = 0
+    )
+    
+    menuOptions.ajouter (
+        element = "bouton",
+        texte = "Ajouter",
+        action = menuOptions.ajouterJoueur,
+        police = BLANC,
+        fond = MAGENTA,
+        marge = 0
+    )
+    
+    menuOptions.ajouter (
+        element = "bouton",
+        texte = "Supprimer",
+        action = menuOptions.supprimerJoueur,
+        police = BLANC,
+        fond = MAGENTA
+    )
+    
+    menuOptions.ajouter (
+        element = "zoneTexte",
+        texte = "Nom de la tâche",
+        police = BLANC,
+        fond = BLEU,
+        marge = 0
+    )
+    
+    menuOptions.ajouter (
+        element = "bouton",
+        texte = "Ajouter",
+        action = menuOptions.ajouterTache,
+        police = BLANC,
+        fond = BLEU,
+        marge = 0
+    )
+    
+    menuOptions.ajouter (
+        element = "bouton",
+        texte = "Supprimer",
+        action = menuOptions.supprimerTache,
+        police = BLANC,
+        fond = BLEU
     )
 
     menuOptions.ajouter (
         element = "bouton",
         texte = "Enregistrer-sous",
         action = menuEnregistrement.ouvrir,
-        fond = BLEU,
-        police = BLANC
+        fond = VERT,
+        police = BLANC,
+        marge = 0
     )
 
     menuOptions.ajouter (
@@ -157,10 +227,13 @@ def lancer ():
     global config
     config = menuOptions.obtenirConfig ()
 
-    ensJoueurs = {"John", "Harry", "Sherlock"}
+    ensJoueurs = config ["joueurs"]
     sommeVoix = [0]
 
-    dicoTaches = {"pont": 0, "immeuble": 0}
+    dicoTaches = {
+        tache: 0
+        for tache in config ["deck"]
+    }
     if dicoTaches == dict ():
         print ("Vous devez définir au moins une tâche dans le menu des options.")
         exit (1)
@@ -168,31 +241,28 @@ def lancer ():
     enJeu.ajouter (
         element = "label",
         texte = "Votez pour une tache d'étalonnage",
-        police = BLANC,
-        fond = VERT,
         marge = 0
     )
 
     enJeu.ajouter (
         element = "label",
-        texte = "qui aura 1 comme priorité :",
-        police = BLANC,
-        fond = VERT,
-        marge = 30
+        texte = "qui aura 1 comme priorité :"
     )
 
     aQuiLeTour = enJeu.ajouter (
         element = "label",
         texte = "",
-        police = NOIR,
-        fond = CYAN,
+        police = BLANC,
+        fond = MAGENTA,
     )
 
     for tache in dicoTaches:
         enJeu.ajouter (
             element = "bouton",
             texte = tache,
-            action = voix (sommeVoix, dicoTaches, tache)
+            action = voix (sommeVoix, dicoTaches, tache),
+            fond = TURQUOISE,
+            marge = 0
         )
     
     enJeu.ouvrir ()
@@ -252,15 +322,12 @@ def lancer ():
     enJeu.ajouter (
         element = "label",
         texte = "Votez pour un coût de la tâche :",
-        police = BLANC,
-        fond = VERT,
         marge = 0
     )
 
     labelTache = enJeu.ajouter (
         element = "label",
         texte = "",
-        police = BLANC,
         fond = VERT,
         marge = 30
     )
@@ -268,9 +335,12 @@ def lancer ():
     aQuiLeTour = enJeu.ajouter (
         element = "label",
         texte = "",
-        police = NOIR,
-        fond = CYAN,
+        police = BLANC,
+        fond = MAGENTA,
     )
+    
+    for nomCarte in nomCartes:
+        enJeu.ajouter ("image", "cartes_" + nomCarte + ".png")       
     
     
     # --- Décision des coûts des tâches ---
@@ -305,7 +375,7 @@ def lancer ():
             # L'on réinitialise les voix
             sommeVoix [0] = 0
             
-    # à faire : finir ça lul
+    
 
 
 def voix (sommeVoix, dicoTaches, tache):
@@ -319,13 +389,12 @@ def voix (sommeVoix, dicoTaches, tache):
 
 def afficher (backlog):
 
-    # à faire : mettre le bakclog à gauche ou à droite
-
     enJeu.ajouter (
         element = "label",
         texte = "- Backlog -",
         police = BLANC,
-        fond = MAGENTA,
+        fond = BLEU,
+        alignement = pygame_menu.locals.ALIGN_LEFT
     )
 
     for tache, cout in backlog.items ():
@@ -335,9 +404,17 @@ def afficher (backlog):
                 element = "label",
                 texte = tache + " : " + str (cout),
                 police = BLANC,
-                fond = MAGENTA,
-                marge = 0
+                fond = BLEU,
+                marge = 0,
+                alignement = pygame_menu.locals.ALIGN_LEFT
             )
+            
+    enJeu.ajouter (
+        element = "space",
+        police = BLANC,
+        fond = TURQUOISE,
+        marge = 0
+    )
     
 
 # Le menu se met à jour tout seul si un autre objet est ajouté ou supprimé
