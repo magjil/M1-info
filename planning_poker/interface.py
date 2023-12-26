@@ -5,6 +5,8 @@ from donnees import *
 class Ecran:
 
 
+    # Constructeur
+
     def __init__ (self, pere = None, titre = ""):
 
 
@@ -31,6 +33,8 @@ class Ecran:
 
         # Configuration
 
+        self.joueurs = set ()
+        self.deck = set ()
         self.entreesConfiguration = dict ()
 
 
@@ -54,7 +58,19 @@ class Ecran:
 
 
 
-    def ajouter (self, element, texte = "", action = vide, choix = list (), fond = BEIGE, police = NOIR, marge = 30):
+    # Ajouter un élément à l'écran
+
+    def ajouter (
+        self,
+        element,
+        texte = "",
+        action = vide,
+        choix = list (),
+        fond = BEIGE,
+        police = NOIR,
+        marge = 30,
+        alignement = pygame_menu.locals.ALIGN_CENTER
+    ):
 
         objetCree = None
 
@@ -67,27 +83,45 @@ class Ecran:
                     texte,
                     font_color = police,
                     background_color = fond,
-                    margin = (0, marge)
+                    margin = (0, marge),
+                    shadow_width = 15,
+                    align = alignement
                 )
 
         
             case "zoneTexte":
 
-                self.entreesConfiguration [texte] = self.menu.add.text_input (
-                    texte + " : ",
+                objetCree = self.menu.add.text_input (
+                    texte + " : ... ",
+                    font_color = police,
+                    background_color = fond,
                     default = "",
-                    maxchar = 21
+                    maxchar = 21,
+                    margin = (0, marge),
+                    shadow_width = 15
                 )
+                
+                objetCree.set_onmouseover (self.illuminer (objetCree, fond))
+                objetCree.set_onmouseleave (self.reAssombrir (objetCree, fond))
+                
+                self.entreesConfiguration [texte] = objetCree
 
 
             case "levier":
 
-                self.entreesConfiguration [texte] = self.menu.add.toggle_switch (
+                objetCree = self.menu.add.toggle_switch (
                     title = texte,
+                    font_color = police,
+                    background_color = fond,
                     default = True,
                     margin = (0, marge),
                     shadow_width = 15
                 )
+                
+                objetCree.set_onmouseover (self.illuminer (objetCree, fond))
+                objetCree.set_onmouseleave (self.reAssombrir (objetCree, fond))
+                
+                self.entreesConfiguration [texte] = objetCree
 
 
             case "bouton":
@@ -96,18 +130,56 @@ class Ecran:
                     texte,
                     action,
                     font_color = police,
-                    background_color = fond
+                    background_color = fond,
+                    margin = (0, marge),
+                    shadow_width = 15
                 )
+                
+                objetCree.set_onmouseover (self.illuminer (objetCree, fond))
+                objetCree.set_onmouseleave (self.reAssombrir (objetCree, fond))
 
 
             case "selecteur":
 
-                self.entreesConfiguration [texte] = self.menu.add.selector (
+                objetCree = self.menu.add.selector (
                     texte + " : ",
                     choix,
                     onchange = action,
+                    font_color = police,
+                    background_color = fond,
                     margin = (0, marge),
                     shadow_width = 15
+                )
+                
+                objetCree.set_onmouseover (self.illuminer (objetCree, fond))
+                objetCree.set_onmouseleave (self.reAssombrir (objetCree, fond))
+                
+                self.entreesConfiguration [texte] = objetCree
+                
+                
+            case "space":
+
+                objetCree = self.menu.add.label (
+                    "",
+                    font_color = police,
+                    background_color = fond,
+                    margin = (0, marge)
+                )
+                
+            
+            case "cadre":
+
+                objetCree = self.menu.add._frame (
+                    width = 117,
+                    height = 181,
+                    orientation = pygame_menu.locals.ORIENTATION_HORIZONTAL
+                )
+            
+            
+            case "image":
+
+                objetCree = self.menu.add.image (
+                    cheminImages + texte
                 )
 
 
@@ -116,10 +188,68 @@ class Ecran:
                 print ("L'élément " + element + "n'est pas reconnu par l'interface.")
                 exit (1)
         
-
+        
         return objetCree
 
 
+
+    # Augmentation de la luminosité quand l'objet est sélectionné
+
+    def illuminer (self, cible, fond):
+    
+        # Moyenne entre du blanc et la couleur d'origine
+        fond = tuple (
+            (couleur + 255) // 2
+            for couleur in fond
+        )
+        
+        def fonctionnelle ():
+            cible.set_background_color (fond)
+        
+        return fonctionnelle
+        
+        
+    def reAssombrir (self, cible, fond):
+        
+        # Remise de la couleur d'origine
+        def fonctionnelle ():
+            cible.set_background_color (fond)
+        
+        return fonctionnelle
+        
+
+
+    # Gestion des joueurs
+    
+    def ajouterJoueur (self):
+    
+        nomJoueur = self.obtenirConfig () ["Nom du joueur"]
+        self.joueurs.add (nomJoueur)
+    
+    
+    def supprimerJoueur (self):
+    
+        nomJoueur = self.obtenirConfig () ["Nom du joueur"]
+        self.joueurs.discard (nomJoueur)
+
+
+
+    # Gestion du deck
+    
+    def ajouterTache (self):
+    
+        nomTache = self.obtenirConfig () ["Nom de la tâche"]
+        self.deck.add (nomTache)
+    
+    
+    def supprimerTache (self):
+    
+        nomTache = self.obtenirConfig () ["Nom de la tâche"]
+        self.deck.discard (nomTache)
+
+
+
+    # Gestion de la configuration
 
     def obtenirConfig (self):
 
@@ -128,6 +258,12 @@ class Ecran:
             nom: entree.get_value ()
             for nom, entree in self.entreesConfiguration.items ()
         }
+        
+        # Récupération des joueurs
+        configuration ["joueurs"] = list (self.joueurs)
+        
+        # Récupération du deck
+        configuration ["deck"] = list (self.deck)
 
         return configuration
 
