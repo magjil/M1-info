@@ -3,22 +3,22 @@ from constantes import *
 
 def ecrire (nomFichier, donnees):
 
-    chemin = cheminDonnees + "/" + nomFichier + ".json"
+    chemin = cheminConfigs + "/" + nomFichier + ".json"
     fichier = open (chemin, "w")
     json.dump (donnees, fichier, indent = 4)
 
 
 def lire (nomFichier):
 
-    chemin = cheminDonnees + nomFichier + ".json"
+    chemin = cheminConfigs + "/" + nomFichier + ".json"
     fichier = open (chemin, "r")
     return json.load (fichier)
 
 
 def dossierDonnees ():
 
-    if not os.path.isdir (cheminDonnees):
-        os.mkdir (cheminDonnees)
+    if not os.path.isdir (cheminConfigs):
+        os.mkdir (cheminConfigs)
 
 
 dossierDonnees ()
