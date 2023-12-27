@@ -2,13 +2,7 @@
     "Musique": false,
     "Effets sonores": true,
     "Temps du tour en s.": "50",
-    "Mode de jeu": [
-        [
-            "Attendre l'unanimit\u00e9",
-            null
-        ],
-        3
-    ],
+    "Mode de jeu": "Attendre l'unanimit\u00e9",
     "Nom du joueur": "joseph",
     "Nom de la t\u00e2che": "hopital",
     "Configuration": [

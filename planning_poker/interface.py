@@ -278,7 +278,9 @@ class Ecran:
         """
         selection = self.entreesConfiguration ["Configuration"].get_value ()
         
+        
         # Configuration actuelle
+
         if selection [1] == 0:
             
             # Lecture des valeurs dans les champs d'entrée
@@ -286,18 +288,26 @@ class Ecran:
                 nom: entree.get_value ()
                 for nom, entree in self.entreesConfiguration.items ()
             }
-        
+            
+            # Récupération du mode de jeu
+            configuration ["Mode de jeu"] = configuration ["Mode de jeu"] [0] [0]
+
+            # Récupération des joueurs
+            configuration ["joueurs"] = list (self.joueurs)
+            
+            # Récupération du deck
+            configuration ["deck"] = list (self.deck)
+
+
         # Configuration pré-enregistrée
+
         else:
             nomSauvegarde = selection [0] [0]
             configuration = lire (nomSauvegarde)
         
-        # Récupération des joueurs
-        configuration ["joueurs"] = list (self.joueurs)
-        
-        # Récupération du deck
-        configuration ["deck"] = list (self.deck)
 
+        # Sortie
+        
         return configuration
 
 
