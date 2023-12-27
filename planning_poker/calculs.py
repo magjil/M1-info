@@ -41,36 +41,37 @@ def majoriteRelative (dicoChoix):
 # Retourne la priorité médiane parmi les votes,
 # ou None s'il n'y a aucun vote
 
-def mediane (dicoPriorites):
+def mediane (dicoChoix):
 
-    nbVoixTotal = sum (dicoPriorites.values ())
+    nbVoixTotal = sum (dicoChoix.values ())
     if nbVoixTotal == 0:
         return None
         
     nbVoixRestant = 0
 
-    for priorite, nbVoix in dicoChoix.items ():
+    for cout, nbVoix in dicoChoix.items ():
         nbVoixRestant += nbVoix
 
         # Médiane atteinte
         if 2 * nbVoixRestant > nbVoixTotal:
-            elue = priorite
+            elu = cout
 
-    return elue
+    return elu
 
 
 # Retourne la priorité moyenne parmi les votes,
 # ou None s'il n'y a aucun vote
 
-def moyenne (dicoPriorites):
+def moyenne (dicoChoix):
 
-    nbVoixTotal = sum (dicoPriorites.values ())
+    nbVoixTotal = sum (dicoChoix.values ())
     if nbVoixTotal == 0:
         return None
 
     valeur = 0
 
-    for priorite, nbVoix in dicoChoix.items ():
-        valeur += priorite * nbVoix
+    for cout, nbVoix in dicoChoix.items ():
+        if cout.isnumeric ():
+            valeur += int (cout) * nbVoix
 
     return round (valeur / nbVoixTotal)

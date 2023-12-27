@@ -329,49 +329,54 @@ def lancer ():
     # Mise à jour du backlog
 
     dicoTaches [choisie] = 1
-    enJeu.menu.clear ()
-    afficher (dicoTaches)
+    
+    
+    # Initialisation des coûts
+    
+    dicoCouts = {
+        nomCarte: 0
+        for nomCarte in nomCartes
+    }
 
-
-    # Mise en place
-    
-    enJeu.ajouter (
-        element = "label",
-        texte = "Votez pour un coût de la tâche :",
-        marge = 0
-    )
-
-    labelTache = enJeu.ajouter (
-        element = "label",
-        texte = "",
-        fond = VERT,
-        marge = 30
-    )
-    
-    aQuiLeTour = enJeu.ajouter (
-        element = "label",
-        texte = "",
-        police = BLANC,
-        fond = MAGENTA,
-    )
-    
-    for nomCarte in nomCartes:
-        enJeu.ajouter (
-            element = "image",
-            texte = "cartes_" + nomCarte + ".png",
-            action = vide,
-            fond = TURQUOISE
-        )       
-    
     
     # --- Décision des coûts des tâches ---
 
     for tache in tachesRestantes:
-        labelTache.set_title (tache)
-        choisie = None
+
+        # Mise en place de l'affichage
+        enJeu.menu.clear ()
+        afficher (dicoTaches)
+        enJeu.ajouter (
+            element = "label",
+            texte = "Votez pour un coût de la tâche :",
+            marge = 0
+        )
+        enJeu.ajouter (
+            element = "label",
+            texte = tache,
+            fond = VERT,
+            marge = 30
+        )
+        aQuiLeTour = enJeu.ajouter (
+            element = "label",
+            texte = "",
+            police = BLANC,
+            fond = MAGENTA,
+        )
+
+        # Disposition des cartes
+        for nomCarte in nomCartes:
+            enJeu.ajouter (
+                element = "image",
+                texte = "cartes_" + nomCarte + ".png",
+                action = voix (sommeVoix, dicoCouts, nomCarte),
+                fond = TURQUOISE
+            )
+
+        choisi = None
         
-        # L'on continue tant qu'aucune tâche n'a été élue
-        while choisie == None:
+        # L'on continue tant qu'aucun coût n'a été élu
+        while choisi == None:
         
             # Les joueurs votent chacun leur tour
             for joueur in ensJoueurs:
@@ -382,28 +387,45 @@ def lancer ():
                 while sommeVoixActuelle == sommeVoix [0]:
                     menuPrincipal.mettreAjour ()
                     
-            # Choix de la tâche par unanimité
+            # Choix du coût par unanimité
             if premierPassage or config ["Mode de jeu"] == "Attendre l'unanimité":
-                choisie = unanimite (dicoTaches)
+                choisi = unanimite (dicoCouts)
 
                 # L'unanimité n'a pas été atteinte
                 premierPassage = False
             
-            # Choix de la tâche par majorité relative
+            # Choix du coût par majorité relative
             else:
-                choisie = majoriteRelative (dicoTaches)
+                choisi = majoriteRelative (dicoCouts)
                 
             # L'on réinitialise les voix
             sommeVoix [0] = 0
-            
-    
+            for nomCarte in nomCartes:
+                dicoCouts [nomCarte] = 0
+
+        # Mise à jour du backlog
+        dicoTaches [tache] = choisi
+
+        
+    # Affichage final
+    enJeu.menu.clear ()
+    afficher (dicoTaches)
 
 
-def voix (sommeVoix, dicoTaches, tache):
+
+def voix (sommeVoix, dico, vote):
     def fonctionnelle ():
 
         sommeVoix [0] += 1
-        dicoTaches [tache] += 1
+
+        if vote == "cafe":
+            pass
+
+        elif vote == "interro":
+            pass
+
+        else:
+            dico [vote] += 1
 
     return fonctionnelle
 
