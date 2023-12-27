@@ -66,6 +66,7 @@ class Ecran:
         texte = "",
         action = vide,
         choix = list (),
+        description = "",
         fond = BEIGE,
         police = NOIR,
         marge = 30,
@@ -80,7 +81,7 @@ class Ecran:
             case "label":
 
                 objetCree = self.menu.add.label (
-                    texte,
+                    title = texte,
                     font_color = police,
                     background_color = fond,
                     margin = (0, marge),
@@ -92,7 +93,7 @@ class Ecran:
             case "zoneTexte":
 
                 objetCree = self.menu.add.text_input (
-                    texte + " : ... ",
+                    title = texte + " : ... ",
                     font_color = police,
                     background_color = fond,
                     default = "",
@@ -124,19 +125,7 @@ class Ecran:
                 self.entreesConfiguration [texte] = objetCree
 
 
-            case "bouton":
-
-                objetCree = self.menu.add.button (
-                    texte,
-                    action,
-                    font_color = police,
-                    background_color = fond,
-                    margin = (0, marge),
-                    shadow_width = 15
-                )
-                
-                objetCree.set_onmouseover (self.illuminer (objetCree, fond))
-                objetCree.set_onmouseleave (self.reAssombrir (objetCree, fond))
+            
 
 
             case "selecteur":
@@ -155,6 +144,36 @@ class Ecran:
                 objetCree.set_onmouseleave (self.reAssombrir (objetCree, fond))
                 
                 self.entreesConfiguration [texte] = objetCree
+
+
+            case "listeDeroulante":
+
+                objetCree = self.menu.add.dropselect (
+                    title = texte + " : ",
+                    items = choix,
+                    default = 0,
+                    placeholder = description
+                )
+
+                objetCree.set_onmouseover (self.illuminer (objetCree, fond))
+                objetCree.set_onmouseleave (self.reAssombrir (objetCree, fond))
+                
+                self.entreesConfiguration [texte] = objetCree
+
+
+            case "bouton":
+
+                objetCree = self.menu.add.button (
+                    texte,
+                    action,
+                    font_color = police,
+                    background_color = fond,
+                    margin = (0, marge),
+                    shadow_width = 15
+                )
+                
+                objetCree.set_onmouseover (self.illuminer (objetCree, fond))
+                objetCree.set_onmouseleave (self.reAssombrir (objetCree, fond))
                 
                 
             case "space":
@@ -253,11 +272,25 @@ class Ecran:
 
     def obtenirConfig (self):
 
-        # Lecture des valeurs dans les champs d'entrée
-        configuration = {
-            nom: entree.get_value ()
-            for nom, entree in self.entreesConfiguration.items ()
-        }
+        """
+        L'on regarde d'abord si l'utilisateur n'a pas déjà
+        sélectionné une configuration pré-enregistrée
+        """
+        selection = self.entreesConfiguration ["Configuration"].get_value ()
+        
+        # Configuration actuelle
+        if selection [1] == 0:
+            
+            # Lecture des valeurs dans les champs d'entrée
+            configuration = {
+                nom: entree.get_value ()
+                for nom, entree in self.entreesConfiguration.items ()
+            }
+        
+        # Configuration pré-enregistrée
+        else:
+            nomSauvegarde = selection [0] [0]
+            configuration = lire (nomSauvegarde)
         
         # Récupération des joueurs
         configuration ["joueurs"] = list (self.joueurs)

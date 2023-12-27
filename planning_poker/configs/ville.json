@@ -1,0 +1,31 @@
+{
+    "Musique": false,
+    "Effets sonores": true,
+    "Temps du tour en s.": "50",
+    "Mode de jeu": [
+        [
+            "Attendre l'unanimit\u00e9",
+            null
+        ],
+        3
+    ],
+    "Nom du joueur": "joseph",
+    "Nom de la t\u00e2che": "hopital",
+    "Configuration": [
+        [
+            "S\u00e9lection actuelle",
+            ""
+        ],
+        0
+    ],
+    "joueurs": [
+        "jean",
+        "paul",
+        "joseph"
+    ],
+    "deck": [
+        "immeuble",
+        "hopital",
+        "pont"
+    ]
+}

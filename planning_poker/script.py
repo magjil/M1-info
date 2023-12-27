@@ -178,6 +178,22 @@ def initialiser ():
         fond = BLEU
     )
 
+    # Scan des configurations sauvegardées
+    preselections = [("Sélection actuelle", "")]
+    for configSauvegardee in os.listdir (cheminConfigs + "/"):
+
+        # Gestion du format
+        if configSauvegardee[-5:] == ".json":
+            configSauvegardee = configSauvegardee[: -5]
+            preselections.append ((configSauvegardee, ""))
+
+    menuOptions.ajouter (
+        element = "listeDeroulante",
+        texte = "Configuration",
+        choix = preselections,
+        description = "Présélection des options"
+    )
+
     menuOptions.ajouter (
         element = "bouton",
         texte = "Enregistrer-sous",
