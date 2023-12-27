@@ -69,6 +69,8 @@ class Ecran:
         description = "",
         fond = BEIGE,
         police = NOIR,
+        largeur = 117,
+        hauteur = 181,
         marge = 30,
         alignement = pygame_menu.locals.ALIGN_CENTER
     ):
@@ -197,9 +199,22 @@ class Ecran:
             
             case "image":
 
+                clicSurImage = self.menu.add.button (
+                    "I",
+                    action,
+                    background_color = fond,
+                    margin = (0, 0)
+                )
+
                 objetCree = self.menu.add.image (
                     cheminImages + texte
                 )
+
+                # Ajustement du bouton par rapport à l'image
+                largeur = objetCree.get_width ()
+                hauteur = objetCree.get_height ()
+                clicSurImage.resize (largeur, hauteur)
+                objetCree.set_float ()
 
 
             case other:
@@ -278,7 +293,7 @@ class Ecran:
         """
         selection = self.entreesConfiguration ["Configuration"].get_value ()
         
-        
+
         # Configuration actuelle
 
         if selection [1] == 0:

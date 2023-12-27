@@ -356,7 +356,12 @@ def lancer ():
     )
     
     for nomCarte in nomCartes:
-        enJeu.ajouter ("image", "cartes_" + nomCarte + ".png")       
+        enJeu.ajouter (
+            element = "image",
+            texte = "cartes_" + nomCarte + ".png",
+            action = vide,
+            fond = TURQUOISE
+        )       
     
     
     # --- Décision des coûts des tâches ---
