@@ -7,3 +7,5 @@
 4) Une fois l'interface ouverte, aller dans le menu des options pour configurer le planning poker
 5) Revenir au menu principal, et lancer le planning à la fin de chaque vote
 6) Une fois tous les coûts de tâches débatus, le backlog complet devrait apparaître.
+
+- Rapport du projet Application planning Poker :  https://drive.google.com/file/d/1RWtbOZNza8E-oirg_BdW4z1ZSrhLfcbd/view?usp=sharing 
