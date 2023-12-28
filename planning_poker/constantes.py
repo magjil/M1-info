@@ -38,7 +38,7 @@ BLANC     = (255, 255, 255)
 # Disposition
 SOLAIRE = pygame_menu.themes.THEME_SOLARIZED
 BLEUTE = pygame_menu.themes.THEME_BLUE
-LARGEUR, HAUTEUR = 1200, 1000
+LARGEUR, HAUTEUR = 950, 780
 SURFACE = pygame.display.set_mode ((LARGEUR, HAUTEUR))
 
 # Modes de jeu
